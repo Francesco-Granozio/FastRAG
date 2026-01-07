@@ -23,7 +23,8 @@ La schermata principale permette di:
 - **Upload PDF**: Caricare documenti PDF tramite drag-and-drop o selezione file. I file vengono processati in modo asincrono e i chunk vengono embeddati nel database vettoriale.
 - **Query LLM**: Porre domande ai documenti caricati. Il sistema recupera i chunk più rilevanti e genera una risposta utilizzando il modello LLM configurato.
 
-![Schermata principale con upload, domanda e risposta](docs/images/demo-main-screen.png)
+<img width="1895" height="891" alt="menu_principale_fast_rag" src="https://github.com/user-attachments/assets/f3effa02-c05d-46db-ac05-cfb4c2b95db0" />
+
 
 ### Gestione File Embeddati
 
@@ -32,7 +33,8 @@ La sezione "Embedded Files" consente di:
 - **Visualizzare i chunk**: Esplorare i chunk generati da ciascun documento, con anteprima del contenuto testuale.
 - **Gestire i file**: Selezionare ed eliminare file embeddati dal database vettoriale.
 
-![Embedded Files con visualizzazione chunk e opzioni di eliminazione](docs/images/demo-embedded-files.png)
+<img width="1892" height="890" alt="gestione_chunks_fast_rag" src="https://github.com/user-attachments/assets/576982b8-7406-429c-a069-49acc7623181" />
+
 
 ### Orchestrator - Fase di Embedding
 
@@ -42,7 +44,8 @@ L'orchestrator Inngest gestisce l'elaborazione asincrona dei PDF. Durante la fas
 - Genera gli embedding per ciascun chunk utilizzando il provider configurato
 - Inserisce i chunk nel database vettoriale Qdrant
 
-![Orchestrator in fase di embedding](docs/images/demo-orchestrator-embedding.png)
+<img width="1898" height="896" alt="orchestrator_embeddings" src="https://github.com/user-attachments/assets/3695a24d-1ea7-457f-b948-89211fddeac1" />
+
 
 ### Orchestrator - Fase di Query
 
@@ -52,7 +55,8 @@ Durante l'esecuzione di una query, l'orchestrator:
 - Passa i chunk al modello LLM insieme alla domanda
 - Genera e restituisce la risposta finale
 
-![Orchestrator in fase di query](docs/images/demo-orchestrator-query.png)
+<img width="1907" height="885" alt="orchestrator_query_llm" src="https://github.com/user-attachments/assets/4bee3760-af3c-4a00-91a8-490c28095423" />
+
 
 ## Quick Start
 
