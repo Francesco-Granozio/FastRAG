@@ -26,9 +26,9 @@ Write-Host "[STEP 1] Fermo FastAPI server..." -ForegroundColor Cyan
 Stop-ProcessOnPort -Port 8000 -ServiceName "FastAPI"
 Write-Host ""
 
-# Ferma Streamlit
-Write-Host "[STEP 2] Fermo Streamlit frontend..." -ForegroundColor Cyan
-Stop-ProcessOnPort -Port 8501 -ServiceName "Streamlit"
+# Ferma React Frontend
+Write-Host "[STEP 2] Fermo React frontend..." -ForegroundColor Cyan
+Stop-ProcessOnPort -Port 3000 -ServiceName "React Frontend"
 Write-Host ""
 
 # Ferma Inngest

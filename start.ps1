@@ -112,7 +112,7 @@ if (Test-Port -Port 8000) {
     Write-Host "  [INFO] FastAPI non è attivo" -ForegroundColor Gray
 }
 
-$fastApiStarted = Start-Service -ServiceName "FastAPI" -Command "uv run uvicorn main:app --host 127.0.0.1 --port 8000" -Port 8000 -Url "http://127.0.0.1:8000" -WaitSeconds 8
+$fastApiStarted = Start-Service -ServiceName "FastAPI" -Command "uv run uvicorn app:app --host 127.0.0.1 --port 8000" -Port 8000 -Url "http://127.0.0.1:8000" -WaitSeconds 8
 
 # Verifica che l'endpoint Inngest sia accessibile
 if ($fastApiStarted) {
@@ -128,18 +128,29 @@ if ($fastApiStarted) {
 Write-Host ""
 
 # ============================================
-# STEP 3: Streamlit (Frontend)
+# STEP 3: React Frontend
 # ============================================
-Write-Host "[STEP 3] Verifica Streamlit frontend (porta 8501)..." -ForegroundColor Cyan
+Write-Host "[STEP 3] Verifica React frontend (porta 3000)..." -ForegroundColor Cyan
 
-if (Test-Port -Port 8501) {
-    Write-Host "  [RESTART] Streamlit è attivo, riavvio..." -ForegroundColor Yellow
-    Stop-ProcessOnPort -Port 8501 -ServiceName "Streamlit"
+if (Test-Port -Port 3000) {
+    Write-Host "  [RESTART] React frontend è attivo, riavvio..." -ForegroundColor Yellow
+    Stop-ProcessOnPort -Port 3000 -ServiceName "React Frontend"
 } else {
-    Write-Host "  [INFO] Streamlit non è attivo" -ForegroundColor Gray
+    Write-Host "  [INFO] React frontend non è attivo" -ForegroundColor Gray
 }
 
-Start-Service -ServiceName "Streamlit" -Command "uv run streamlit run streamlit_app.py" -Port 8501 -Url "http://localhost:8501" -WaitSeconds 5
+# Verifica che esista la directory frontend
+if (-not (Test-Path "frontend")) {
+    Write-Host "  [ERROR] Directory 'frontend' non trovata!" -ForegroundColor Red
+    Write-Host "  [INFO] Esegui prima: cd frontend && npm install" -ForegroundColor Yellow
+} else {
+    # Verifica che node_modules esista
+    if (-not (Test-Path "frontend\node_modules")) {
+        Write-Host "  [WARN] node_modules non trovato. Esegui: cd frontend; npm install" -ForegroundColor Yellow
+    } else {
+        Start-Service -ServiceName "React Frontend" -Command "cd frontend; npm run dev" -Port 3000 -Url "http://localhost:3000" -WaitSeconds 8
+    }
+}
 
 Write-Host ""
 
@@ -184,10 +195,10 @@ if (Test-Port -Port 8000) {
     $allOk = $false
 }
 
-if (Test-Port -Port 8501) {
-    Write-Host "  [OK] Streamlit: http://localhost:8501" -ForegroundColor Green
+if (Test-Port -Port 3000) {
+    Write-Host "  [OK] React Frontend: http://localhost:3000" -ForegroundColor Green
 } else {
-    Write-Host "  [WARN] Streamlit potrebbe non essere ancora pronto" -ForegroundColor Yellow
+    Write-Host "  [WARN] React Frontend potrebbe non essere ancora pronto" -ForegroundColor Yellow
 }
 
 if (Test-Port -Port 8288) {

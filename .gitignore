@@ -1,6 +1,7 @@
 # Python-generated files
 __pycache__/
 *.py[oc]
+*.pyc
 build/
 dist/
 wheels/
@@ -8,8 +9,24 @@ wheels/
 
 # Virtual environments
 .venv
+venv/
 
 # Environment variables
 .env
 .env.local
 .env.production
+
+# Application data
+uploads/
+qdrant_storage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
