@@ -1,12 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { FileText, Database } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
-interface NavItem {
-  path: string;
-  label: string;
-  icon: LucideIcon;
-}
+import type { NavItem } from '../../types';
 
 const Navbar = () => {
   const location = useLocation();

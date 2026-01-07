@@ -2,6 +2,10 @@ from fastapi import APIRouter, HTTPException
 from typing import List, Optional
 from pydantic import BaseModel
 from src.core.vector_db import QdrantStorage
+import logging
+
+# Usa il logger di uvicorn per logging consistente
+logger = logging.getLogger("uvicorn")
 
 router = APIRouter()
 
@@ -90,29 +94,39 @@ async def delete_file(source_id: str):
 @router.delete("/files")
 async def delete_files(request: DeleteFilesRequest):
     """Delete multiple files."""
+    logger.info(f"[API DELETE] Received request to delete {len(request.source_ids)} files: {request.source_ids}")
+    
     results = []
     errors = []
     
     for source_id in request.source_ids:
+        logger.info(f"[API DELETE] Processing deletion for source_id: {source_id}")
         try:
             storage = QdrantStorage()
             deleted_count = storage.delete_by_source(source_id)
+            logger.info(f"[API DELETE] Successfully deleted {deleted_count} chunks for source_id: {source_id}")
+            
             results.append({
                 "source_id": source_id,
                 "chunks_deleted": deleted_count,
                 "status": "success",
             })
         except Exception as e:
+            logger.error(f"[API DELETE] Error deleting source_id {source_id}: {str(e)}", exc_info=True)
             errors.append({
                 "source_id": source_id,
                 "error": str(e),
                 "status": "error",
             })
     
+    logger.info(f"[API DELETE] Deletion summary: {len(results)} successful, {len(errors)} errors")
+    
     # Se ci sono errori, restituisci 207 Multi-Status o 500 se tutti falliscono
     if errors:
+        logger.warning(f"[API DELETE] Some deletions failed: {errors}")
         if len(errors) == len(request.source_ids):
             # Tutti i file hanno fallito
+            logger.error(f"[API DELETE] All files failed to delete")
             raise HTTPException(
                 status_code=500,
                 detail={
@@ -122,20 +136,24 @@ async def delete_files(request: DeleteFilesRequest):
             )
         else:
             # Alcuni file hanno fallito - restituisci 200 con informazioni sugli errori
-            return {
+            response = {
                 "deleted": results,
                 "errors": errors,
                 "total_deleted": len(results),
                 "total_errors": len(errors),
                 "message": f"Some files failed to delete: {len(errors)} error(s)",
             }
+            logger.info(f"[API DELETE] Returning partial success response: {response}")
+            return response
     
     # Tutti i file cancellati con successo
-    return {
+    response = {
         "deleted": results,
         "errors": [],
         "total_deleted": len(results),
         "total_errors": 0,
         "message": "All files deleted successfully",
     }
+    logger.info(f"[API DELETE] All deletions successful. Returning: {response}")
+    return response
 

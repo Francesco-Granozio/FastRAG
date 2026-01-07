@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { ChunkInfo } from '../../services/api';
-
-interface ChunkViewerProps {
-  sourceId: string;
-  chunks: ChunkInfo[];
-  total: number;
-  loading: boolean;
-}
+import type { ChunkViewerProps } from '../../types';
 
 const ChunkViewer = ({ sourceId, chunks, total, loading }: ChunkViewerProps) => {
   const [page, setPage] = useState<number>(1);

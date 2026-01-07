@@ -30,7 +30,9 @@ ModelConfig.validate()
 # CONSTANTS - LLM generation settings
 # ============================================================================
 DEFAULT_MAX_TOKENS = 1024  # Numero massimo di token da generare per risposta LLM
-DEFAULT_TEMPERATURE = 0.2  # Temperatura per generazione LLM (0.0-1.0, più bassa = più deterministica)
+DEFAULT_TEMPERATURE = (
+    0.2  # Temperatura per generazione LLM (0.0-1.0, più bassa = più deterministica)
+)
 DEFAULT_TOP_K = 5  # Numero di chunk da recuperare per default nelle query
 
 # ============================================================================
@@ -52,7 +54,9 @@ inngest_client = inngest.Inngest(
 @inngest_client.create_function(
     fn_id="RAG: Ingest PDF",
     trigger=inngest.TriggerEvent(event="rag/ingest_pdf"),
-    throttle=inngest.Throttle(limit=THROTTLE_LIMIT, period=datetime.timedelta(minutes=THROTTLE_PERIOD_MINUTES)),
+    throttle=inngest.Throttle(
+        limit=THROTTLE_LIMIT, period=datetime.timedelta(minutes=THROTTLE_PERIOD_MINUTES)
+    ),
     rate_limit=inngest.RateLimit(
         limit=RATE_LIMIT_LIMIT,
         period=datetime.timedelta(hours=RATE_LIMIT_PERIOD_HOURS),

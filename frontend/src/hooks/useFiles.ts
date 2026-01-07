@@ -1,23 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useQuery as useReactQuery } from '@tanstack/react-query';
 import { filesAPI, FilesResponse, ChunksResponse } from '../services/api';
-
-interface UseFilesReturn {
-  files: Array<{ source_id: string; chunk_count: number }>;
-  totalFiles: number;
-  totalChunks: number;
-  isLoading: boolean;
-  error: Error | null;
-  refetch: () => void;
-  selectedFiles: Set<string>;
-  toggleFileSelection: (sourceId: string) => void;
-  selectAll: () => void;
-  deselectAll: () => void;
-  deleteFiles: (sourceIds: string[]) => Promise<any>;
-  deleteFile: (sourceId: string) => Promise<boolean>;
-  deleteConfirm: boolean;
-  setDeleteConfirm: (value: boolean) => void;
-}
+import type { UseFilesReturn } from '../types';
 
 export const useFiles = (): UseFilesReturn => {
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());

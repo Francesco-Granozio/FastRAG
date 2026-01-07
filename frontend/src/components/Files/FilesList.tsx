@@ -25,11 +25,14 @@ const FilesList = () => {
   const handleDelete = async (): Promise<void> => {
     if (selectedFiles.size === 0) return;
 
+    const filesToDelete = Array.from(selectedFiles);
+
     setDeleting(true);
     setDeleteError(null);
 
     try {
-      const result = await deleteFiles(Array.from(selectedFiles));
+      const result = await deleteFiles(filesToDelete);
+      
       // Controlla se ci sono errori nell'array errors
       if (result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
         const failedFiles = result.errors.map((e: any) => e.source_id || e).join(', ');
@@ -38,7 +41,6 @@ const FilesList = () => {
         // Fallback: controlla total_errors se presente
         setDeleteError(`Some files failed to delete. Check console for details.`);
       }
-      // Se non ci sono errori, la cancellazione è riuscita
     } catch (err) {
       setDeleteError(err instanceof Error ? err.message : 'Unknown error occurred while deleting files');
     } finally {

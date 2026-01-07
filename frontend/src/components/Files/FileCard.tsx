@@ -2,15 +2,7 @@ import { useState } from 'react';
 import { FileText, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import { useFileChunks } from '../../hooks/useFiles';
 import ChunkViewer from './ChunkViewer';
-
-interface FileCardProps {
-  file: {
-    source_id: string;
-    chunk_count: number;
-  };
-  isSelected: boolean;
-  onToggleSelect: () => void;
-}
+import type { FileCardProps } from '../../types';
 
 const FileCard = ({ file, isSelected, onToggleSelect }: FileCardProps) => {
   const [expanded, setExpanded] = useState<boolean>(false);

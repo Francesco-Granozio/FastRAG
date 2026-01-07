@@ -1,18 +1,6 @@
 import { useState, useCallback } from 'react';
 import { queryAPI, pollUntilComplete, QueryStatus } from '../services/api';
-
-interface UseQueryReturn {
-  submitQuery: (question: string, topK?: number) => Promise<void>;
-  loading: boolean;
-  error: string | null;
-  result: QueryStatus['result'] | null;
-  progress: {
-    status: string;
-    message: string;
-    eventId?: string;
-  } | null;
-  reset: () => void;
-}
+import type { UseQueryReturn } from '../types';
 
 export const useQuery = (): UseQueryReturn => {
   const [loading, setLoading] = useState<boolean>(false);

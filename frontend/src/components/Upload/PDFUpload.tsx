@@ -1,13 +1,7 @@
 import { useState, useCallback, DragEvent, ChangeEvent } from 'react';
 import { Upload, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { uploadAPI, pollUntilComplete, UploadStatus } from '../../services/api';
-
-interface UploadStatusState {
-  status: string;
-  message: string;
-  eventId?: string;
-  filename?: string;
-}
+import type { UploadStatusState } from '../../types';
 
 const PDFUpload = () => {
   const [dragActive, setDragActive] = useState<boolean>(false);

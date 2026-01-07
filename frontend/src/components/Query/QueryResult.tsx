@@ -1,13 +1,5 @@
 import { CheckCircle, FileText } from 'lucide-react';
-
-interface QueryResultProps {
-  result: {
-    answer: string;
-    sources?: string[];
-    num_contexts?: number;
-  };
-  onReset: () => void;
-}
+import type { QueryResultProps } from '../../types';
 
 const QueryResult = ({ result, onReset }: QueryResultProps) => {
   return (

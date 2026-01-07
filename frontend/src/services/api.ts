@@ -1,4 +1,18 @@
 import axios, { AxiosInstance } from 'axios';
+import type {
+  UploadResponse,
+  UploadStatus,
+  QueryRequest,
+  QueryResponse,
+  QueryStatus,
+  FileInfo,
+  FilesResponse,
+  ChunkInfo,
+  ChunksResponse,
+  DeleteFileResponse,
+  DeleteFilesResponse,
+  PollOptions,
+} from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -37,87 +51,21 @@ api.interceptors.response.use(
   }
 );
 
-// Types
-export interface UploadResponse {
-  message: string;
-  filename: string;
-  event_id: string;
-}
-
-export interface UploadStatus {
-  event_id: string;
-  status: string;
-  run?: {
-    status?: string;
-    output?: any;
-    error?: string;
-  } | null;
-}
-
-export interface QueryRequest {
-  question: string;
-  top_k: number;
-}
-
-export interface QueryResponse {
-  event_id: string;
-  status: string;
-  message: string;
-}
-
-export interface QueryStatus {
-  event_id: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
-  result?: {
-    answer: string;
-    sources: string[];
-    num_contexts: number;
-  };
-  error?: string;
-}
-
-export interface FileInfo {
-  source_id: string;
-  chunk_count: number;
-}
-
-export interface FilesResponse {
-  files: FileInfo[];
-  total_files: number;
-  total_chunks: number;
-}
-
-export interface ChunkInfo {
-  id: string;
-  text: string;
-  source: string;
-}
-
-export interface ChunksResponse {
-  chunks: ChunkInfo[];
-  total: number;
-}
-
-export interface DeleteFileResponse {
-  message: string;
-  source_id: string;
-  chunks_deleted: number;
-}
-
-export interface DeleteFilesResponse {
-  deleted: Array<{
-    source_id: string;
-    chunks_deleted: number;
-    status: string;
-  }>;
-  errors: Array<{
-    source_id: string;
-    error: string;
-    status: string;
-  }>;
-  total_deleted: number;
-  total_errors: number;
-}
+// Re-export types for convenience
+export type {
+  UploadResponse,
+  UploadStatus,
+  QueryRequest,
+  QueryResponse,
+  QueryStatus,
+  FileInfo,
+  FilesResponse,
+  ChunkInfo,
+  ChunksResponse,
+  DeleteFileResponse,
+  DeleteFilesResponse,
+  PollOptions,
+};
 
 // Upload API
 export const uploadAPI = {
@@ -174,23 +122,21 @@ export const filesAPI = {
   },
 
   deleteFiles: async (sourceIds: string[]): Promise<DeleteFilesResponse> => {
-    const response = await api.delete<DeleteFilesResponse>('/api/files', {
-      data: { source_ids: sourceIds },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data;
+    try {
+      const response = await api.delete<DeleteFilesResponse>('/api/files', {
+        data: { source_ids: sourceIds },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
   },
 };
 
 // Polling utility
-export interface PollOptions {
-  interval?: number;
-  timeout?: number;
-  maxAttempts?: number | null;
-}
-
 export const pollUntilComplete = async (
   checkStatus: () => Promise<QueryStatus | UploadStatus>,
   onProgress?: (status: QueryStatus | UploadStatus) => void,
