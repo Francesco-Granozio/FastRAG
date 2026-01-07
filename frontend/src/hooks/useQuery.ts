@@ -1,16 +1,20 @@
-import { useState, useCallback } from 'react';
-import { queryAPI, pollUntilComplete, QueryStatus } from '../services/api';
+import { useCallback } from 'react';
+import { queryAPI, pollUntilComplete } from '../services/api';
+import { useQueryStore } from '../stores/queryStore';
 import type { UseQueryReturn } from '../types';
 
 export const useQuery = (): UseQueryReturn => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<QueryStatus['result'] | null>(null);
-  const [progress, setProgress] = useState<{
-    status: string;
-    message: string;
-    eventId?: string;
-  } | null>(null);
+  const {
+    loading,
+    error,
+    result,
+    progress,
+    setLoading,
+    setError,
+    setResult,
+    setProgress,
+    reset: resetStore,
+  } = useQueryStore();
 
   const submitQuery = useCallback(async (question: string, topK: number = 5): Promise<void> => {
     setLoading(true);
@@ -53,14 +57,11 @@ export const useQuery = (): UseQueryReturn => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [setLoading, setError, setResult, setProgress]);
 
   const reset = useCallback((): void => {
-    setLoading(false);
-    setError(null);
-    setResult(null);
-    setProgress(null);
-  }, []);
+    resetStore();
+  }, [resetStore]);
 
   return {
     submitQuery,

@@ -15,7 +15,7 @@ const Navbar = () => {
       <div className="flex flex-col h-full">
         <div className="flex-shrink-0 px-6 py-6 border-b border-slate-700">
           <h1 className="text-xl font-bold text-slate-100">
-            RAG Application
+            FastRAG
           </h1>
         </div>
         <div className="flex-1 px-4 py-4 space-y-2">

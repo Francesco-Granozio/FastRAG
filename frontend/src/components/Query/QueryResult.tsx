@@ -37,7 +37,7 @@ const QueryResult = ({ result, onReset }: QueryResultProps) => {
         </div>
       )}
 
-      {result.num_contexts && (
+      {result.num_contexts !== undefined && result.num_contexts > 0 && (
         <p className="text-xs text-slate-400">
           Used {result.num_contexts} context chunks
         </p>

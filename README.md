@@ -12,6 +12,48 @@ Applicazione RAG (Retrieval-Augmented Generation) per l'ingest e query di docume
 - **Frontend**: React + TypeScript + Vite + Tailwind CSS
 - **Backend**: FastAPI con endpoint REST
 
+## Demo
+
+L'applicazione RAG offre un'interfaccia intuitiva per l'upload di documenti PDF, la loro elaborazione e embedding nel database vettoriale, e la possibilità di interrogare i documenti tramite modelli LLM. Di seguito alcune schermate che illustrano le funzionalità principali.
+
+### Schermata Principale - Upload e Query
+
+La schermata principale permette di:
+
+- **Upload PDF**: Caricare documenti PDF tramite drag-and-drop o selezione file. I file vengono processati in modo asincrono e i chunk vengono embeddati nel database vettoriale.
+- **Query LLM**: Porre domande ai documenti caricati. Il sistema recupera i chunk più rilevanti e genera una risposta utilizzando il modello LLM configurato.
+
+![Schermata principale con upload, domanda e risposta](docs/images/demo-main-screen.png)
+
+### Gestione File Embeddati
+
+La sezione "Embedded Files" consente di:
+
+- **Visualizzare i chunk**: Esplorare i chunk generati da ciascun documento, con anteprima del contenuto testuale.
+- **Gestire i file**: Selezionare ed eliminare file embeddati dal database vettoriale.
+
+![Embedded Files con visualizzazione chunk e opzioni di eliminazione](docs/images/demo-embedded-files.png)
+
+### Orchestrator - Fase di Embedding
+
+L'orchestrator Inngest gestisce l'elaborazione asincrona dei PDF. Durante la fase di embedding, il sistema:
+
+- Carica e segmenta il documento PDF in chunk
+- Genera gli embedding per ciascun chunk utilizzando il provider configurato
+- Inserisce i chunk nel database vettoriale Qdrant
+
+![Orchestrator in fase di embedding](docs/images/demo-orchestrator-embedding.png)
+
+### Orchestrator - Fase di Query
+
+Durante l'esecuzione di una query, l'orchestrator:
+
+- Recupera i chunk più rilevanti dal database vettoriale basandosi sulla domanda dell'utente
+- Passa i chunk al modello LLM insieme alla domanda
+- Genera e restituisce la risposta finale
+
+![Orchestrator in fase di query](docs/images/demo-orchestrator-query.png)
+
 ## Quick Start
 
 Per una guida completa, consulta [SETUP.md](SETUP.md).

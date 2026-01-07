@@ -1,11 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useQuery as useReactQuery } from '@tanstack/react-query';
 import { filesAPI, FilesResponse, ChunksResponse } from '../services/api';
+import { useFilesStore } from '../stores/filesStore';
 import type { UseFilesReturn } from '../types';
 
 export const useFiles = (): UseFilesReturn => {
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
+  const {
+    selectedFiles,
+    deleteConfirm,
+    toggleFileSelection: toggleSelection,
+    selectAll: selectAllFiles,
+    deselectAll: deselectAllFiles,
+    setDeleteConfirm: setDeleteConfirmState,
+  } = useFilesStore();
 
   // Fetch all files with React Query
   const {
@@ -20,38 +27,30 @@ export const useFiles = (): UseFilesReturn => {
   });
 
   const toggleFileSelection = useCallback((sourceId: string): void => {
-    setSelectedFiles((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(sourceId)) {
-        newSet.delete(sourceId);
-      } else {
-        newSet.add(sourceId);
-      }
-      return newSet;
-    });
-  }, []);
+    toggleSelection(sourceId);
+  }, [toggleSelection]);
 
   const selectAll = useCallback((): void => {
     if (filesData?.files) {
-      setSelectedFiles(new Set(filesData.files.map((f) => f.source_id)));
+      selectAllFiles(filesData.files.map((f) => f.source_id));
     }
-  }, [filesData]);
+  }, [filesData, selectAllFiles]);
 
   const deselectAll = useCallback((): void => {
-    setSelectedFiles(new Set());
-  }, []);
+    deselectAllFiles();
+  }, [deselectAllFiles]);
 
   const deleteFiles = useCallback(async (sourceIds: string[]): Promise<any> => {
     try {
       const result = await filesAPI.deleteFiles(sourceIds);
       await refetch();
-      setSelectedFiles(new Set());
-      setDeleteConfirm(false);
+      deselectAllFiles();
+      setDeleteConfirmState(false);
       return result;
     } catch (err) {
       throw err;
     }
-  }, [refetch]);
+  }, [refetch, deselectAllFiles, setDeleteConfirmState]);
 
   const deleteFile = useCallback(
     async (sourceId: string): Promise<boolean> => {
@@ -80,7 +79,7 @@ export const useFiles = (): UseFilesReturn => {
     deleteFiles,
     deleteFile,
     deleteConfirm,
-    setDeleteConfirm,
+    setDeleteConfirm: setDeleteConfirmState,
   };
 };
 
