@@ -234,5 +234,4 @@ Il codice Python è organizzato in:
 - CORS è configurato per permettere richieste da `localhost:3000` a `localhost:8000`
 - In produzione, il frontend può essere buildato e servito direttamente da FastAPI
 - I file di configurazione `.env` sono nella cartella `env_samples/` - copia quello che ti serve nella root come `.env`
-- La cartella `uploads/` contiene i PDF caricati (non committare file sensibili)
 - La cartella `qdrant_storage/` contiene i dati del database vettoriale (persistente)
